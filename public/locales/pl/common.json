@@ -1,0 +1,13 @@
+{
+  "save": "Zapisz",
+  "loading": "Ładowanie...",
+  "location_blocked_title": "Dostęp do lokalizacji zablokowany",
+  "location_blocked_message": "Dostęp do lokalizacji jest zablokowany w ustawieniach przeglądarki. Aby włączyć:",
+  "location_blocked_step1_prefix": "Kliknij",
+  "location_blocked_or": "lub",
+  "location_blocked_step1_suffix": "na pasku adresu",
+  "location_blocked_step2": "Znajdź uprawnienia 'Lokalizacja'",
+  "location_blocked_step3": "Zmień na 'Zezwól'",
+  "location_blocked_step4": "Odśwież stronę",
+  "location_blocked_ok": "OK"
+}

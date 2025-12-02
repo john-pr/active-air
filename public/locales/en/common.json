@@ -1,0 +1,13 @@
+{
+  "save": "Save",
+  "loading": "Loading...",
+  "location_blocked_title": "Location Access Blocked",
+  "location_blocked_message": "Location access is blocked in your browser settings. To enable it:",
+  "location_blocked_step1_prefix": "Click the",
+  "location_blocked_or": "or",
+  "location_blocked_step1_suffix": "in your browser's address bar",
+  "location_blocked_step2": "Find 'Location' permissions",
+  "location_blocked_step3": "Change it to 'Allow'",
+  "location_blocked_step4": "Reload the page",
+  "location_blocked_ok": "OK"
+}
