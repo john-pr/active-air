@@ -7,12 +7,13 @@ async function getJson(url) {
 }
 
 export const giosApi = {
-  base: BASE,
   fetchStationsOnce: (size = 500) => getJson(`${BASE}/station/findAll?page=0&size=${size}`),
+  fetchIndexByStationId: (stationId) => getJson(`${BASE}/aqindex/getIndex/${stationId}`),
+
+
   fetchStationsFirstPage: () => getJson(`${BASE}/station/findAll?page=0&size=20`),
   fetchByUrl: (url) => getJson(url),
   fetchStationsPage: (page = 0, size = 200) => getJson(`${BASE}/station/findAll?page=${page}&size=${size}`),
-  fetchIndexByStationId: (id) => getJson(`${BASE}/aqindex/getIndex/${id}`),
   fetchSensorsByStationId: (id) => getJson(`${BASE}/station/sensors/${id}`),
   fetchLatestBySensorId: (id) => getJson(`${BASE}/data/getData/${id}`),
 };

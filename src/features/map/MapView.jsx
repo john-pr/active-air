@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { MapContainer, ZoomControl, useMap } from "react-leaflet";
 import TileLayerSwitcher from "./layers/TileLayerSwitcher";
-import StationsLayer from "./layers/StationsLayer";
+import MapEvents from "./MapEvents.jsx";
+import StationsClusterLayer from "./layers/StationsClusterLayer";
 
 const MapCenterUpdater = ({ center }) => {
     const map = useMap();
@@ -21,7 +22,9 @@ const MapCenterUpdater = ({ center }) => {
 };
 
 const MapView = props => {
-    const { selectedStationId, selectedMapLayer, center, stations } = props;
+    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange } = props;
+
+    const useClusters = true;
 
     return (
         <MapContainer 
@@ -33,10 +36,13 @@ const MapView = props => {
             zoomControl={false}
         >   
              <MapCenterUpdater center={center} />
-             <TileLayerSwitcher 
-               provider={selectedMapLayer}
+             <TileLayerSwitcher provider={selectedMapLayer}/>
+             <MapEvents onViewPortChange={onViewPortChange} />
+             <StationsClusterLayer
+                stations={stations}
+                indicesById={indicesById}
+                // onMarkerClick={onMarkerClick}
              />
-             <StationsLayer stations={stations} />
              <ZoomControl position="bottomright" />
         </MapContainer>
     );

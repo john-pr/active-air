@@ -1,9 +1,11 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
+@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 .station-marker__wrap svg {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: block;
 }
 
@@ -19,4 +21,22 @@
 }
 .station-marker__wrap {
   cursor: pointer;
+}
+
+.cluster-icon {
+  background: transparent;
+  border: none;
+}
+
+.cluster-bubble {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: var(--cluster-color);
+  color: #fff;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
 }

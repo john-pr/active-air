@@ -1,16 +1,49 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useCallback, useMemo} from "react";
 import MapView from "./MapView";
 import { useParams, Outlet } from "react-router";
 import MapButton from "./ui/MapButton";
 import LocationBlockedModal from "./ui/LocationBlockedModal";
 import ThreeDots from "../../assets/loaders/threeDots.svg?react";
-import { useStationsBootstrap } from "../stations/useStationsbootStrap.js";
+import { useStationsAndIndicesBootstrap } from "../stations/useStationsAndIndicesBootstrap.js";
+import { useIndicesForViewport } from "../stations/useIndicesForViewport.js";
+import { useDebouncedValue } from "../../app/hooks.js";
 
 const MapPage = () => {
     const { stationId } = useParams();
 
-     const { stations, status, error } = useStationsBootstrap();
+    const { stations, status, error } = useStationsAndIndicesBootstrap();
 
+    const [bbox, setBbox] = useState(null);
+
+    const onViewPortChange = useCallback((newBbox) => {
+      // Debugging 
+      // console.log("[viewport] change received", newBbox);
+      setBbox(newBbox);
+    }, []);
+
+    const debouncedBbox = useDebouncedValue(bbox, 500);
+
+
+    const stationsInView = useMemo(() => {
+      if (!debouncedBbox) return [];
+
+      return stations.filter((s) =>
+        s.lat >= debouncedBbox.minLat &&
+        s.lat <= debouncedBbox.maxLat &&
+        s.lon >= debouncedBbox.minLon &&
+        s.lon <= debouncedBbox.maxLon
+      );
+    }, [stations, debouncedBbox]);
+
+    //Debugging
+    //   useEffect(() => {
+    //   if (!bbox) return;
+    //   const ids = stationsInView.map(s => s.id);
+    //   console.log("[viewport] stationsInView count:", ids.length);
+    //   console.log("[viewport] stationsInView ids:", ids.slice(0, 50)); // nie spamuj całymi 500
+    // }, [bbox, stationsInView]);
+
+    const indicesById = useIndicesForViewport(stationsInView);
 
     const [selectedMapLayer, setSelectedMapLayer] = useState(() => {
         // Initialize from local storage or default to "osm"
@@ -149,6 +182,8 @@ const MapPage = () => {
            selectedMapLayer={selectedMapLayer}
            center={mapCenter}
            stations={stations}
+           indicesById={indicesById}
+           onViewPortChange={onViewPortChange}
           />
           <Outlet />
         </div>
