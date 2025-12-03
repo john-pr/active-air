@@ -9,5 +9,12 @@
   "location_blocked_step2": "Znajdź uprawnienia 'Lokalizacja'",
   "location_blocked_step3": "Zmień na 'Zezwól'",
   "location_blocked_step4": "Odśwież stronę",
-  "location_blocked_ok": "OK"
+  "location_blocked_ok": "OK",
+  "station_popup.aqi": "AQI",
+  "station_popup.no_index": "brak indeksu",
+  "station_popup.loading_measurements": "Ładowanie pomiarów…",
+  "station_popup.pm10": "PM10",
+  "station_popup.pm25": "PM2.5",
+  "station_popup.no_data": "brak danych",
+  "station_popup.no_measurements": "Brak danych pomiarowych"
 }

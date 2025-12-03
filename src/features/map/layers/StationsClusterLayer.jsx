@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import StationMarker from "./StationMarker.jsx";
 import { createClusterIcon } from "../utils/clusterIcon.js";

@@ -1,9 +1,10 @@
 import L from "leaflet";
-import { Marker, Popup } from "react-leaflet";
+import { Marker } from "react-leaflet";
 import circleSvg from "../../../assets/mapMarkers/circleMarker.svg?raw";
 import { getMarkerColorFromIndexValue } from "../utils/colors.js";
 import { useNavigate } from "react-router";
 import { useMemo, useRef, useEffect } from "react";
+import StationPopup from "../ui/StationPopup.jsx";
 
 const cleanSvg = circleSvg
   .replace(/<\?xml.*?\?>/g, "")
@@ -52,14 +53,13 @@ const StationMarker = ({
       }}
       options={{ indexValue }}
     >
-      <Popup>
-        <div className="text-sm">
-          <div className="font-semibold">{station.name}</div>
-          <div>{station.city ?? "—"}</div>
-          <div>{station.address ?? "—"}</div>
-          {/* Additional station details can be added here */}
-        </div>
-      </Popup>
+      <StationPopup
+        stationId={station.id}
+        stationName={station.name}
+        city={station.city}
+        address={station.address}
+        indexValue={indexValue}
+      />
     </Marker>
   );
 };

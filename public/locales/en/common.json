@@ -9,5 +9,12 @@
   "location_blocked_step2": "Find 'Location' permissions",
   "location_blocked_step3": "Change it to 'Allow'",
   "location_blocked_step4": "Reload the page",
-  "location_blocked_ok": "OK"
+  "location_blocked_ok": "OK",
+  "station_popup.aqi": "AQI",
+  "station_popup.no_index": "no index",
+  "station_popup.loading_measurements": "Loading measurements…",
+  "station_popup.pm10": "PM10",
+  "station_popup.pm25": "PM2.5",
+  "station_popup.no_data": "no data",
+  "station_popup.no_measurements": "No measurement data"
 }
