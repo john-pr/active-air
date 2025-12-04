@@ -6,16 +6,13 @@ import { useNavigate } from "react-router";
 import { useMemo, useRef, useEffect } from "react";
 import StationPopup from "../StationPopup.jsx";
 
-const cleanSvg = circleSvg
-  .replace(/<\?xml.*?\?>/g, "")
-  .replace(/<!DOCTYPE.*?>/g, "");
 
 const buildIcon = (color) =>
   L.divIcon({
     className: "station-marker",
     html: `
       <div class="station-marker__wrap" style="--marker-color:${color}">
-        ${cleanSvg}
+        ${circleSvg}
       </div>
     `,
     iconSize: [32, 32],
@@ -24,9 +21,9 @@ const buildIcon = (color) =>
   });
 
 const StationMarker = ({
-  station,
-  indexValue,
-  onMarkerClick,
+      station,
+      indexValue,
+      onMarkerClick,
 }) => {
 
    const markerRef = useRef(null);
@@ -36,7 +33,7 @@ const StationMarker = ({
 
     useEffect(() => {
       if (markerRef.current) {
-        markerRef.current.options.indexValue = indexValue; 
+        markerRef.current.options.indexValue = indexValue;
       }
     }, [indexValue]);
 

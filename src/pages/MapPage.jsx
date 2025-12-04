@@ -7,21 +7,36 @@ import ThreeDots from "../assets/loaders/threeDots.svg?react";
 import { useStationsAndIndicesBootstrap } from "../features/stations/hooks/useStationsAndIndicesBootstrap.js";
 import { useIndicesForViewport } from "../features/stations/hooks/useIndicesForViewport.js";
 import { useDebouncedValue } from "../app/hooks.js";
+import { useThrottledCallback } from "../features/map/hooks/useThrottledCallback.js"; 
+
+const EPS = 1e-5;
 
 const MapPage = () => {
-    const { stationId } = useParams();
+    // const { stationId } = useParams();
 
-    const { stations, status, error } = useStationsAndIndicesBootstrap();
+    const { stations = [], status, error } = useStationsAndIndicesBootstrap();
 
+    //bbox - bounding box of current viewport
     const [bbox, setBbox] = useState(null);
+    const debouncedBbox = useDebouncedValue(bbox, 500);
 
-    const onViewPortChange = useCallback((newBbox) => {
-      // Debugging 
-      // console.log("[viewport] change received", newBbox);
-      setBbox(newBbox);
+    //compares two bounding boxes with tolerance
+    const sameBbox = useCallback((a, b) => {
+      if (!a || !b) return false;
+      return (
+        Math.abs(a.minLat - b.minLat) < EPS &&
+        Math.abs(a.maxLat - b.maxLat) < EPS &&
+        Math.abs(a.minLon - b.minLon) < EPS &&
+        Math.abs(a.maxLon - b.maxLon) < EPS
+      );
     }, []);
 
-    const debouncedBbox = useDebouncedValue(bbox, 500);
+    const handleViewportChange = useCallback((newBbox) => {
+      setBbox(prev => (sameBbox(prev, newBbox) ? prev : newBbox));
+    }, [sameBbox]);
+
+    const onViewPortChange = useThrottledCallback(handleViewportChange, 200);
+    
 
 
     const stationsInView = useMemo(() => {
@@ -53,6 +68,7 @@ const MapPage = () => {
     
     const [isLayerReady, setIsLayerReady] = useState(false);
     const [mapCenter, setMapCenter] = useState([52.23, 21]); // Default: Warsaw
+    const [mapZoom, setMapZoom] = useState(13);
     const [geoConsent, setGeoConsent] = useState(null);
     const [isBrowserBlocked, setIsBrowserBlocked] = useState(false);
     const [showBlockedModal, setShowBlockedModal] = useState(false);
@@ -96,9 +112,7 @@ const MapPage = () => {
                     setGeoConsent(true);
                     
                     // If shouldZoom is true, we'll pass zoom info to MapView
-                    if (shouldZoom) {
-                        setMapCenter([...newCenter, 13]); // Include zoom level
-                    }
+                    if (shouldZoom) setMapZoom(13);
                 },
                 (error) => {
                     console.error("Error getting location:", error);
@@ -133,7 +147,7 @@ const MapPage = () => {
     }, [selectedMapLayer, isLayerReady]);
 
 
-    if (!isLayerReady) {
+    if (!isLayerReady || status === "loading") {
         return (
           <div className="flex min-h-dvh w-dvw items-center justify-center">
             <ThreeDots
@@ -146,6 +160,8 @@ const MapPage = () => {
           </div>
         )
     }
+
+    if (status === "failed") return <></>;
 
     return (
         <div className="h-screen w-screen relative">   
@@ -178,12 +194,13 @@ const MapPage = () => {
           </div>
 
           <MapView 
-           selectedStationId={stationId} 
+          //  selectedStationId={stationId} 
            selectedMapLayer={selectedMapLayer}
            center={mapCenter}
            stations={stations}
            indicesById={indicesById}
            onViewPortChange={onViewPortChange}
+           zoom={mapZoom}
           />
           <Outlet />
         </div>

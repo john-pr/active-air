@@ -3,64 +3,65 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks.js";
 import { fetchIndexByStationId } from "../model/indicesSlice.js";
 import { selectIndicesById, selectIndexStatusById } from "../model/indicesSelectors.js";
 
-export function useIndicesForViewport(stationsInView) {
+export function useIndicesForViewport(stationsInView = []) {
   const dispatch = useAppDispatch();
   const indicesById = useAppSelector(selectIndicesById);
   const statusById = useAppSelector(selectIndexStatusById);
 
   const idsInView = useMemo(
-    () => stationsInView.map((stationObject) => String(stationObject.id)),
-    [stationsInView]
+      () => stationsInView.map(s => String(s.id)),
+      [stationsInView]
   );
 
   const missingIds = useMemo(() => {
-    return idsInView.filter((stationId) => {
-      const hasData = indicesById[stationId] != null;
-      const isLoading = statusById[stationId] === "loading";
+    return idsInView.filter(id => {
+      const hasData = indicesById[id] != null;
+      const isLoading = statusById[id] === "loading";
       return !hasData && !isLoading;
     });
   }, [idsInView, indicesById, statusById]);
 
   const cancelRef = useRef(false);
+  const timersRef = useRef([]);
 
   useEffect(() => {
     if (missingIds.length === 0) return;
 
+    // cancel previous run
     cancelRef.current = true;
-    const kickOffTimeout = setTimeout(() => {
-      cancelRef.current = false;
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
 
-      let pointer = 0;
+    cancelRef.current = false;
 
-      const runBatch = () => {
-        if (cancelRef.current) return;
+    let pointer = 0;
 
-        const batch = missingIds.slice(pointer, pointer + 20);
+    const runBatch = () => {
+      if (cancelRef.current) return;
 
-        batch.forEach((stationId) => {
-          if (
-            indicesById[stationId] == null &&
-            statusById[stationId] !== "loading"
-          ) {
-            dispatch(fetchIndexByStationId(stationId));
-          }
-        });
+      const batch = missingIds.slice(pointer, pointer + 20);
 
-        pointer += 20;
-
-        if (pointer < missingIds.length) {
-          setTimeout(runBatch, 250);
+      batch.forEach(id => {
+        if (indicesById[id] == null && statusById[id] !== "loading") {
+          dispatch(fetchIndexByStationId(id));
         }
-      };
+      });
 
-      runBatch();
-    }, 0);
+      pointer += 20;
+      if (pointer < missingIds.length) {
+        const t = setTimeout(runBatch, 250);
+        timersRef.current.push(t);
+      }
+    };
+
+    runBatch();
 
     return () => {
-      clearTimeout(kickOffTimeout);
       cancelRef.current = true;
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
     };
-  }, [missingIds, dispatch]);
+  }, [missingIds, indicesById, statusById, dispatch]);
 
   return indicesById;
 }

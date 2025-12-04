@@ -22,7 +22,7 @@ const MapCenterUpdater = ({ center }) => {
 };
 
 const MapView = props => {
-    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange } = props;
+    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange, zoom } = props;
 
 
     return (
@@ -30,7 +30,7 @@ const MapView = props => {
             className="h-full w-full z-0"
             id="map"
             center={center}
-            zoom={13}
+            zoom={zoom}
             scrollWheelZoom={true}
             zoomControl={false}
         >   

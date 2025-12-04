@@ -35,7 +35,7 @@ export function useStationsAndIndicesBootstrap() {
     }, 300);
 
     return () => clearInterval(intervalId);
-  }, [status, stations, dispatch]);
+  }, [status, stations, dispatch, indicesById]);
 
   return { stations, indicesById, status, error };
 }
