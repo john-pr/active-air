@@ -16,3 +16,12 @@ Note: This will impact Vite dev & build performances.
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Theme (Night/Day)
+
+This app includes a simple theme context to manage light/dark (day/night) modes.
+
+- **Provider:** `src/app/ThemeContext.jsx` exports `ThemeProvider` which is already wrapped around the app in `src/main.jsx`.
+- **Hook:** use `useTheme()` from `src/app/hooks.js` to access `{ theme, setTheme, toggleTheme, isDark }`.
+- **Persistence:** theme choice is saved to `localStorage` under key `appTheme` and defaults to the user's `prefers-color-scheme` if available.
+- **Styling:** the provider toggles the `dark` class on the document root so Tailwind or utility CSS can react to dark mode.

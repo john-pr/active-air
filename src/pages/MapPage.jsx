@@ -8,12 +8,14 @@ import { useStationsAndIndicesBootstrap } from "../features/stations/hooks/useSt
 import { useIndicesForViewport } from "../features/stations/hooks/useIndicesForViewport.js";
 import { useDebouncedValue } from "../app/hooks.js";
 import { useThrottledCallback } from "../features/map/hooks/useThrottledCallback.js"; 
+import { useTheme } from "../app/hooks.js";
+import MapControls from "../features/map/ui/MapControls.jsx"; 
 
 const EPS = 1e-5;
 
 const MapPage = () => {
     // const { stationId } = useParams();
-
+    const { toggleTheme, isDark } = useTheme();
     const { stations = [], status, error } = useStationsAndIndicesBootstrap();
 
     //bbox - bounding box of current viewport
@@ -170,29 +172,14 @@ const MapPage = () => {
               onClose={handleBlockedModalClose}
             />
           )}
-          {/* <div className="absolute top-2.5 right-2.5 z-10 bg-white rounded-sm shadow-sm  w-8.5 h-8.5 flex items-center justify-center border-2 border-[rgba(0,0,0,0.2)] bg-clip-padding">
-            <MapButton
-              type={selectedMapLayer === "osm" ? "satelliteLayer" : "mapLayer"}
-              handleClick={() => {
-                setSelectedMapLayer(selectedMapLayer === "osm" ? "sat" : "osm");
-              }}
-            />
-          </div> */}
-          <div className="absolute bottom-23 right-2.5 z-10 bg-white rounded-sm shadow-sm  w-8.5 h-8.5 flex items-center justify-center border-2 border-[rgba(0,0,0,0.2)] bg-clip-padding">
-            <MapButton
-              type={geoConsent === false ? "geoLocationDisabled" : "geoLocation"}
-              handleClick={handleGeoButtonClick}
-            />
-          </div>
-          <div className="absolute bottom-32 right-2.5 z-10 bg-white rounded-sm shadow-sm  w-8.5 h-8.5 flex items-center justify-center border-2 border-[rgba(0,0,0,0.2)] bg-clip-padding">
-            <MapButton
-              type={selectedMapLayer === "osm" ? "satelliteLayer" : "mapLayer"}
-              handleClick={() => {
-                setSelectedMapLayer(selectedMapLayer === "osm" ? "sat" : "osm");
-              }}
-            />
-          </div>
-
+          <MapControls
+            isDark={isDark}
+            toggleTheme={toggleTheme}
+            geoConsent={geoConsent}
+            handleGeoButtonClick={handleGeoButtonClick}
+            selectedMapLayer={selectedMapLayer}
+            setSelectedMapLayer={setSelectedMapLayer}
+          />
           <MapView 
           //  selectedStationId={stationId} 
            selectedMapLayer={selectedMapLayer}

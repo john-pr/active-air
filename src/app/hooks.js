@@ -1,5 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext} from "react";
+import { ThemeContext } from './ThemeContext.jsx';
 
 export const useAppDispatch = () => useDispatch();
 export const useAppSelector = useSelector;
@@ -13,4 +14,8 @@ export function useDebouncedValue(value, delayMs) {
     }, [value, delayMs]);
 
     return debounced;
+}
+
+export function useTheme() {
+    return useContext(ThemeContext);
 }

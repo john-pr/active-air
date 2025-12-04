@@ -3,6 +3,35 @@
 @import "leaflet.markercluster/dist/MarkerCluster.css";
 @import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* @layer components {
+  .dark .leaflet-tile-pane {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  }
+} */
+/* light mode */
+.leaflet-control-zoom a {
+  background-color: #ffffff;
+  color: #000;           
+  border-color: #ccc;    
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+/* dark mode */
+.dark .leaflet-control-zoom a {
+  background-color: #374151; /* gray-700 */
+  color: #ffffff;
+  border-color: #4b5563;     /* gray-600 */
+}
+
+.dark .leaflet-control-zoom a:hover {
+  background-color: #4b5563; /* gray-600 */
+}
+
 .station-marker__wrap svg {
   width: 32px;
   height: 32px;

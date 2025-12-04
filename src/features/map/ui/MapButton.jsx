@@ -1,43 +1,44 @@
-import { Map, SatelliteDish, Locate, LocateOff } from "lucide-react";
+import {
+  Map,
+  SatelliteDish,
+  Locate,
+  LocateOff,
+  Sun,
+  Moon,
+} from "lucide-react";
 
-const MapButton = props => {
+const ICONS = {
+  mapLayer: Map,
+  satelliteLayer: SatelliteDish,
+  geoLocation: Locate,
+  geoLocationDisabled: LocateOff,
+  lightTheme: Moon,
+  darkTheme: Sun,
+};
 
-    const { handleClick, type } = props;
+const SIZE = {
+  mapLayer: "w-5.5 h-5.5",
+  satelliteLayer: "w-5.5 h-5.5",
+  geoLocation: "w-5 h-5",
+  geoLocationDisabled: "w-5 h-5",
+  lightTheme: "w-5 h-5",
+  darkTheme: "w-5 h-5",
+};
 
-    const renderIcon = () => {
-        switch(type) {
-            case 'mapLayer':
-                return (
-                    <div className="flex items-center justify-center">
-                        <Map className="w-5.5 h-5.5" />
-                    </div>
-                )
-            case 'satelliteLayer':
-                return (
-                     <div className="flex items-center justify-center">
-                        <SatelliteDish className="w-5.5 h-5.5"/>
-                    </div>
-                );
-            case 'geoLocation':
-                return (    
-                    <div className="flex items-center justify-center">  
-                       <Locate className="w-5 h-5"/>    
-                    </div>
-                );
-            case 'geoLocationDisabled':
-                return (    
-                    <div className="flex items-center justify-center">  
-                       <LocateOff className="w-5 h-5"/>    
-                    </div>
-                );
-            default: return null;       
-        }
-    }
+const MapButton = ({ handleClick, type, className = "" }) => {
+  const Icon = ICONS[type];
+  if (!Icon) return null;
 
-    return (
-        <button className="cursor-pointer" onClick={handleClick}>
-            {renderIcon()}
-        </button>
-    );
-};       
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className={`cursor-pointer flex items-center justify-center text-black dark:text-white ${className}`}
+      aria-label={type}
+    >
+      <Icon className={`${SIZE[type]} stroke-current`} />
+    </button>
+  );
+};
+
 export default MapButton;

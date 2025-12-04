@@ -1,4 +1,5 @@
 import { TileLayer } from "react-leaflet";
+import { useTheme } from "../../../../app/hooks.js";
 
 const PROVIDERS = {
   osm: {
@@ -17,7 +18,15 @@ const PROVIDERS = {
   },
 };
 
-const TileLayerSwitcher = ({ provider = "osm" }) => {
+const TileLayerSwitcher = ({ selectedMapLayer  = "osm" }) => {
+  const { isDark } = useTheme();
+
+  const provider =
+  selectedMapLayer === "osm"
+    // ? (isDark ? "osmDark" : "osm")
+    ? (isDark ? "osmDark" : "osm")
+    : "sat";
+
   const p = PROVIDERS[provider] ?? PROVIDERS.osm;
 
   return (

@@ -6,15 +6,18 @@ import { BrowserRouter } from 'react-router'
 import App from './App.jsx'
 import { Provider } from "react-redux";
 import { store } from "./app/store.js";
+import ThemeProvider from './app/ThemeContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
      <Suspense fallback={null}>
-      <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </Provider>
+        <Provider store={store}>
+          <ThemeProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ThemeProvider>
+        </Provider>
     </Suspense>
   // </StrictMode> 
 )

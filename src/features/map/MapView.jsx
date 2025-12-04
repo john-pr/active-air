@@ -35,7 +35,7 @@ const MapView = props => {
             zoomControl={false}
         >   
              <MapCenterUpdater center={center} />
-             <TileLayerSwitcher provider={selectedMapLayer}/>
+             <TileLayerSwitcher selectedMapLayer={selectedMapLayer}/>
              <MapEvents onViewPortChange={onViewPortChange} />
              <StationsClusterLayer
                 stations={stations}
