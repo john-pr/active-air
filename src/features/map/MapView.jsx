@@ -4,25 +4,35 @@ import TileLayerSwitcher from "./ui/layers/TileLayerSwitcher";
 import MapEvents from "./MapEvents.jsx";
 import StationsClusterLayer from "./ui/layers/StationsClusterLayer";
 
-const MapCenterUpdater = ({ center }) => {
+const MapCenterUpdater = ({ center, flyToStation }) => {
     const map = useMap();
-    
+
     useEffect(() => {
-        if (center) {
-            // Check if zoom level is included (array length 3)
-            if (center.length === 3) {
-                map.setView([center[0], center[1]], center[2]);
-            } else {
-                map.setView(center, map.getZoom());
-            }
+        if (!center) return;
+
+        // If flyToStation is set, do a smooth flyTo animation (for URL station entry)
+        if (flyToStation) {
+            // Start at zoom 12, then fly to zoom 14
+            map.setView(center, 12);
+            setTimeout(() => {
+                map.flyTo(center, 14, { duration: 1.5 });
+            }, 100);
+            return;
         }
-    }, [center, map]);
-    
+
+        // Regular center update
+        if (center.length === 3) {
+            map.setView([center[0], center[1]], center[2]);
+        } else {
+            map.setView(center, map.getZoom());
+        }
+    }, [center, flyToStation, map]);
+
     return null;
 };
 
 const MapView = props => {
-    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange, zoom } = props;
+    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange, zoom, flyToStation } = props;
 
 
     return (
@@ -34,13 +44,14 @@ const MapView = props => {
             scrollWheelZoom={true}
             zoomControl={false}
         >   
-             <MapCenterUpdater center={center} />
+             <MapCenterUpdater center={center} flyToStation={flyToStation} />
              <TileLayerSwitcher selectedMapLayer={selectedMapLayer}/>
              <MapEvents onViewPortChange={onViewPortChange} />
              <StationsClusterLayer
                 stations={stations}
                 indicesById={indicesById}
-                // onMarkerClick={onMarkerClick}
+                selectedStationId={selectedStationId}
+                isInitialUrlEntry={flyToStation}
              />
              <ZoomControl position="bottomright" />
         </MapContainer>

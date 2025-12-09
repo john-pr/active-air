@@ -42,12 +42,13 @@ const StationPopup = ({ stationId, stationName, city, address, indexValue }) => 
 
   return (
     <Popup
+      autoClose
       eventHandlers={{
-        add: handleOpen,      
+        add: handleOpen,
         remove: handleClose,
       }}
     >
-      <div className="text-sm space-y-1">
+      <div className="space-y-1 text-sm">
         <div className="font-semibold">{stationName}</div>
         {/* <div>{city ?? "—"} · {address ?? "—"}</div> */}
 

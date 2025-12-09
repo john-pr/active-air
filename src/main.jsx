@@ -7,15 +7,18 @@ import App from './App.jsx'
 import { Provider } from "react-redux";
 import { store } from "./app/store.js";
 import ThemeProvider from './app/ThemeContext.jsx';
+import ToastProvider from './app/ToastContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
      <Suspense fallback={null}>
         <Provider store={store}>
           <ThemeProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
+            <ToastProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </ToastProvider>
           </ThemeProvider>
         </Provider>
     </Suspense>

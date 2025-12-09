@@ -42,7 +42,6 @@ export const ThemeProvider = ({ children }) => {
   }, []);
 
   const toggleTheme = useCallback(() => {
-    console.log('Toggling theme');
     setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
   }, []);
 

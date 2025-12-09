@@ -1,4 +1,6 @@
 {
+  "error.title": "Błąd",
+  "error.dismiss": "Zamknij",
   "save": "Zapisz",
   "loading": "Ładowanie...",
   "location_blocked_title": "Dostęp do lokalizacji zablokowany",
