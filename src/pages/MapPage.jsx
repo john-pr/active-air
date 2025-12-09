@@ -14,7 +14,7 @@ import MapControls from "../features/map/ui/MapControls.jsx";
 const EPS = 1e-5;
 
 const MapPage = () => {
-    // const { stationId } = useParams();
+    const { stationId } = useParams();
     const { toggleTheme, isDark } = useTheme();
     const { stations = [], status, error } = useStationsAndIndicesBootstrap();
 
@@ -74,6 +74,25 @@ const MapPage = () => {
     const [geoConsent, setGeoConsent] = useState(null);
     const [isBrowserBlocked, setIsBrowserBlocked] = useState(false);
     const [showBlockedModal, setShowBlockedModal] = useState(false);
+
+    // Capture initial stationId from URL (only on first render)
+    const [initialStationId] = useState(() => stationId);
+
+    // Compute initial center/zoom for station from URL
+    const initialStationTarget = useMemo(() => {
+        if (!initialStationId) return null;
+        if (status !== "succeeded" || !stations.length) return null;
+
+        const station = stations.find(s => String(s.id) === initialStationId);
+        if (station) {
+            return { center: [station.lat, station.lon], zoom: 15 };
+        }
+        return null;
+    }, [initialStationId, stations, status]);
+
+    // Effective center/zoom: use URL station target if available, otherwise user state
+    const effectiveCenter = initialStationTarget?.center ?? mapCenter;
+    const effectiveZoom = initialStationTarget?.zoom ?? mapZoom;
 
     // Load layer from local storage on mount
     useEffect(() => {
@@ -180,14 +199,15 @@ const MapPage = () => {
             selectedMapLayer={selectedMapLayer}
             setSelectedMapLayer={setSelectedMapLayer}
           />
-          <MapView 
-          //  selectedStationId={stationId} 
+          <MapView
+           selectedStationId={stationId}
            selectedMapLayer={selectedMapLayer}
-           center={mapCenter}
+           center={effectiveCenter}
            stations={stations}
            indicesById={indicesById}
            onViewPortChange={onViewPortChange}
-           zoom={mapZoom}
+           zoom={effectiveZoom}
+           flyToStation={!!initialStationTarget}
           />
           <Outlet />
         </div>

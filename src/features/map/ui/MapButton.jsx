@@ -25,19 +25,17 @@ const SIZE = {
   darkTheme: "w-5 h-5",
 };
 
-const MapButton = ({ handleClick, type, className = "" }) => {
+const MapButton = ({ type, className = "" }) => {
   const Icon = ICONS[type];
   if (!Icon) return null;
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
+    <div
       className={`cursor-pointer flex items-center justify-center text-black dark:text-white ${className}`}
       aria-label={type}
     >
       <Icon className={`${SIZE[type]} stroke-current`} />
-    </button>
+    </div>
   );
 };
 
