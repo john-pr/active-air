@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useStationsBootstrap } from "./useStationsBootStrap.js";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks.js";
+import { useAppDispatch, useAppSelector } from "@app/hooks";
 import { fetchIndexByStationId } from "../model/indicesSlice.js";
 import { selectIndicesById } from "../model/indicesSelectors.js";
 

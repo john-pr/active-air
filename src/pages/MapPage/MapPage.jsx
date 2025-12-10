@@ -1,15 +1,14 @@
 import {useEffect, useState, useCallback, useMemo} from "react";
-import MapView from "../features/map/MapView.jsx";
+import MapView from "@widgets/Map/MapView";
 import { useParams, Outlet } from "react-router";
-import MapButton from "../features/map/ui/MapButton.jsx";
-import LocationBlockedModal from "../features/map/ui/LocationBlockedModal.jsx";
-import ThreeDots from "../assets/loaders/threeDots.svg?react";
-import { useStationsAndIndicesBootstrap } from "../features/stations/hooks/useStationsAndIndicesBootstrap.js";
-import { useIndicesForViewport } from "../features/stations/hooks/useIndicesForViewport.js";
-import { useDebouncedValue } from "../app/hooks.js";
-import { useThrottledCallback } from "../features/map/hooks/useThrottledCallback.js"; 
-import { useTheme } from "../app/hooks.js";
-import MapControls from "../features/map/ui/MapControls.jsx"; 
+import LocationBlockedModal from "@widgets/Map/components/modals/LocationBlockedModal.jsx";
+import ThreeDots from "@assets/loaders/threeDots.svg?react";
+import { useStationsAndIndicesBootstrap } from "@features/stations/hooks/useStationsAndIndicesBootstrap";
+import { useIndicesForViewport } from "@features/stations/hooks/useIndicesForViewport";
+import { useDebouncedValue } from "@app/hooks";
+import { useThrottledCallback } from "@shared/lib/hooks/useThrottledCallback";
+import { useTheme } from "@app/hooks";
+import MapControls from "@widgets/Map/components/controls/MapControls.jsx";
 
 const EPS = 1e-5;
 

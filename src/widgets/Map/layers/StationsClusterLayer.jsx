@@ -1,8 +1,8 @@
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { useMap } from "react-leaflet";
-import StationMarker from "./StationMarker.jsx";
-import { createClusterIcon } from "../../utils/clusterIcon.js";
-import { extractUsableIndexValue } from "../../utils/extractIndexValue.js";
+import StationMarker from "../components/markers/StationMarker.jsx";
+import { createClusterIcon } from "@shared/lib/utils/clusterIcon.js";
+import { extractUsableIndexValue } from "@shared/lib/utils/extractIndexValue.js";
 
 const StationsClusterLayer = ({
   stations,

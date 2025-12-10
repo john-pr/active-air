@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks.js";
+import { useAppDispatch, useAppSelector } from "@app/hooks";
 import { fetchIndexByStationId } from "../model/indicesSlice.js";
 import { selectIndicesById, selectIndexStatusById } from "../model/indicesSelectors.js";
 

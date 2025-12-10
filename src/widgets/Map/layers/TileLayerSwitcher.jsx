@@ -1,5 +1,5 @@
 import { TileLayer } from "react-leaflet";
-import { useTheme } from "../../../../app/hooks.js";
+import { useTheme } from "@app/hooks.js";
 
 const PROVIDERS = {
   osm: {

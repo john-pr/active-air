@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks.js";
+import { useAppDispatch, useAppSelector } from "@app/hooks";
 import { fetchStations } from "../model/stationsSlice.js";
 import {
   selectStationsStatus,

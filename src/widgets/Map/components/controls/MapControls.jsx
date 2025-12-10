@@ -1,4 +1,4 @@
-import MapButton from "./MapButton";
+import MapButton from "./MapButton.jsx";
 
 const FloatingBtn = ({ className, children, handleClick }) => (
   <button
