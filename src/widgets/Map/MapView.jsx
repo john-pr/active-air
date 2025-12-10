@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { MapContainer, ZoomControl, useMap } from "react-leaflet";
-import TileLayerSwitcher from "./ui/layers/TileLayerSwitcher";
-import MapEvents from "./MapEvents.jsx";
-import StationsClusterLayer from "./ui/layers/StationsClusterLayer";
+import TileLayerSwitcher from "./layers/TileLayerSwitcher";
+import MapEvents from "./MapEvents";
+import StationsClusterLayer from "./layers/StationsClusterLayer";
 
 const MapCenterUpdater = ({ center, flyToStation }) => {
     const map = useMap();

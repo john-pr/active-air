@@ -1,10 +1,10 @@
 import L from "leaflet";
 import { Marker, useMap } from "react-leaflet";
-import circleSvg from "../../../../assets/mapMarkers/circleMarker.svg?raw";
-import { getMarkerColorFromIndexValue } from "../../utils/colors.js";
+import circleSvg from "@assets/mapMarkers/circleMarker.svg?raw";
+import { getMarkerColorFromIndexValue } from "@shared/lib/utils/colors.js";
 import { useNavigate } from "react-router";
 import { useMemo, useRef, useEffect } from "react";
-import StationPopup from "../StationPopup.jsx";
+import StationPopup from "../popups/StationPopup.jsx";
 
 
 const buildIcon = (color) =>
