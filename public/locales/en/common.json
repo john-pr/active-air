@@ -22,7 +22,7 @@
   "station_popup.so2": "SO₂",
   "station_popup.no_data": "no data",
   "station_popup.no_measurements": "No measurement data",
-  "legend.title": "Air Quality Index",
+  "legend.title": "Air Quality Index (AQI)",
   "legend.very_good": "Very Good",
   "legend.good": "Good",
   "legend.moderate": "Moderate",
