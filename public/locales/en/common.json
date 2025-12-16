@@ -15,6 +15,7 @@
   "station_popup.aqi": "AQI",
   "station_popup.no_index": "no index",
   "station_popup.loading_measurements": "Loading measurements…",
+  "station_popup.measurements": "Measurements",
   "station_popup.pm10": "PM10",
   "station_popup.pm25": "PM2.5",
   "station_popup.o3": "O₃",

@@ -4,7 +4,7 @@ import TileLayerSwitcher from "./layers/TileLayerSwitcher";
 import MapEvents from "./MapEvents";
 import StationsClusterLayer from "./layers/StationsClusterLayer";
 
-const MapCenterUpdater = ({ center, flyToStation }) => {
+const MapCenterUpdater = ({ center, flyToStation, isPanelOpen }) => {
     const map = useMap();
 
     useEffect(() => {
@@ -28,15 +28,30 @@ const MapCenterUpdater = ({ center, flyToStation }) => {
         }
     }, [center, flyToStation, map]);
 
+    // When panel closes, adjust the map view to compensate for the offset
+    useEffect(() => {
+        if (isPanelOpen === undefined) return;
+
+        if (!isPanelOpen) {
+            // Panel just closed, shift the map right by 160px to keep the same location visible
+            const panelWidth = 320;
+            const currentCenter = map.getCenter();
+            const centerPixel = map.project([currentCenter.lat, currentCenter.lng], map.getZoom());
+            const adjustedCenter = map.unproject([centerPixel.x + panelWidth / 2, centerPixel.y], map.getZoom());
+
+            map.setView(adjustedCenter, map.getZoom());
+        }
+    }, [isPanelOpen, map]);
+
     return null;
 };
 
 const MapView = props => {
-    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange, zoom, flyToStation } = props;
+    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange, zoom, flyToStation, isPanelOpen, selectedStationCircleData } = props;
 
 
     return (
-        <MapContainer 
+        <MapContainer
             className="h-full w-full z-0"
             id="map"
             center={center}
@@ -44,7 +59,7 @@ const MapView = props => {
             scrollWheelZoom={true}
             zoomControl={false}
         >
-             <MapCenterUpdater center={center} flyToStation={flyToStation} />
+             <MapCenterUpdater center={center} flyToStation={flyToStation} isPanelOpen={isPanelOpen} />
              <TileLayerSwitcher selectedMapLayer={selectedMapLayer}/>
              <MapEvents onViewPortChange={onViewPortChange} />
              <StationsClusterLayer
@@ -52,6 +67,7 @@ const MapView = props => {
                 indicesById={indicesById}
                 selectedStationId={selectedStationId}
                 isInitialUrlEntry={flyToStation}
+                selectedStationCircleData={selectedStationCircleData}
              />
              <ZoomControl position="bottomright" />
         </MapContainer>

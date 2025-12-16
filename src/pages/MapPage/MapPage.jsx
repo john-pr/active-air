@@ -9,6 +9,7 @@ import { useDebouncedValue } from "@app/hooks";
 import { useThrottledCallback } from "@shared/lib/hooks/useThrottledCallback";
 import { useTheme } from "@app/hooks";
 import MapControls from "@widgets/Map/components/controls/MapControls.jsx";
+import { LeftPanel } from "@widgets/Map/components/panels";
 
 const EPS = 1e-5;
 
@@ -92,6 +93,9 @@ const MapPage = () => {
     // Effective center/zoom: use URL station target if available, otherwise user state
     const effectiveCenter = initialStationTarget?.center ?? mapCenter;
     const effectiveZoom = initialStationTarget?.zoom ?? mapZoom;
+
+    // Compute circle data for selected station (not currently used - circle is disabled)
+    const selectedStationCircleData = null;
 
     // Load layer from local storage on mount
     useEffect(() => {
@@ -184,12 +188,13 @@ const MapPage = () => {
     if (status === "failed") return <></>;
 
     return (
-        <div className="h-screen w-screen relative">   
+        <div className="h-screen w-screen relative">
           {showBlockedModal && (
-            <LocationBlockedModal 
+            <LocationBlockedModal
               onClose={handleBlockedModalClose}
             />
           )}
+          <LeftPanel stationId={stationId} indicesById={indicesById} />
           <MapControls
             isDark={isDark}
             toggleTheme={toggleTheme}
@@ -207,6 +212,8 @@ const MapPage = () => {
            onViewPortChange={onViewPortChange}
            zoom={effectiveZoom}
            flyToStation={!!initialStationTarget}
+           isPanelOpen={!!stationId}
+           selectedStationCircleData={selectedStationCircleData}
           />
           <Outlet />
         </div>

@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { Marker, useMap } from "react-leaflet";
+import { Marker, useMap, Circle } from "react-leaflet";
 import circleSvg from "@assets/mapMarkers/circleMarker.svg?raw";
 import { getMarkerColorFromIndexValue } from "@shared/lib/utils/colors.js";
 import { useNavigate } from "react-router";
@@ -39,20 +39,37 @@ const StationMarker = ({
       }
     }, [indexValue]);
 
-    // Open popup on initial URL entry only (after flyTo animation)
-    useEffect(() => {
-      if (!isInitialUrlEntry) return;
-      if (hasOpenedForUrlEntry.current) return;
+    // Disabled popup on initial URL entry - using left panel instead
+    // useEffect(() => {
+    //   if (!isInitialUrlEntry) return;
+    //   if (hasOpenedForUrlEntry.current) return;
 
-      hasOpenedForUrlEntry.current = true;
-      const timer = setTimeout(() => {
-        markerRef.current?.openPopup();
-      }, 1800);
-      return () => clearTimeout(timer);
-    }, [isInitialUrlEntry]);
+    //   hasOpenedForUrlEntry.current = true;
+    //   const timer = setTimeout(() => {
+    //     markerRef.current?.openPopup();
+    //   }, 1800);
+    //   return () => clearTimeout(timer);
+    // }, [isInitialUrlEntry]);
 
   return (
-    <Marker
+    <>
+      {isSelected && (
+        <Circle
+          center={[station.lat, station.lon]}
+          radius={2000}
+          pathOptions={{
+            color: color,
+            weight: 2,
+            opacity: 0.7,
+            fill: true,
+            fillColor: color,
+            fillOpacity: 0.2,
+            lineCap: 'round',
+            lineJoin: 'round',
+          }}
+        />
+      )}
+      <Marker
         ref={markerRef}
         position={[station.lat, station.lon]}
         icon={icon}
@@ -64,22 +81,32 @@ const StationMarker = ({
               return;
             }
 
+            console.log(`[Station Selected] ID: ${station.id}, Name: ${station.name}, Coords: [${station.lat}, ${station.lon}], AQI: ${indexValue}`);
+
             navigate(`/station/${station.id}`);
             // Longer duration when zoomed out, shorter when already zoomed in
             const currentZoom = map.getZoom();
             const targetZoom = Math.max(currentZoom, 14); // Don't zoom out if already zoomed in
             const duration = currentZoom >= 12 ? 0.5 : currentZoom >= 9 ? 0.9 : 1.2;
-            map.flyTo([station.lat, station.lon], targetZoom, { duration });
 
-            // Open popup after flyTo completes using moveend event
-            const onMoveEnd = () => {
-              map.off('moveend', onMoveEnd);
-              // Small delay to let marker settle after cluster rebuild
-              setTimeout(() => {
-                markerRef.current?.openPopup();
-              }, 50);
-            };
-            map.on('moveend', onMoveEnd);
+            // Offset the center to account for the left panel (w-80 = 320px)
+            // The visible map is on the right, so we need to shift the map center LEFT
+            // to compensate and keep the station centered in the visible area
+            const panelWidth = 320;
+            const centerPixel = map.project([station.lat, station.lon], targetZoom);
+            const offsetCenter = map.unproject([centerPixel.x - panelWidth / 2, centerPixel.y], targetZoom);
+
+            map.flyTo(offsetCenter, targetZoom, { duration });
+
+            // Disabled popup - using left panel instead
+            // const onMoveEnd = () => {
+            //   map.off('moveend', onMoveEnd);
+            //   // Small delay to let marker settle after cluster rebuild
+            //   setTimeout(() => {
+            //     markerRef.current?.openPopup();
+            //   }, 50);
+            // };
+            // map.on('moveend', onMoveEnd);
           },
           dblclick: (e) => {
             // Prevent double-click zoom on markers
@@ -88,14 +115,16 @@ const StationMarker = ({
         }}
         options={{ indexValue }}
       >
-        <StationPopup
+        {/* Popup disabled - using left panel instead */}
+        {/* <StationPopup
           stationId={station.id}
           stationName={station.name}
           city={station.city}
           address={station.address}
           indexValue={indexValue}
-        />
+        /> */}
       </Marker>
+    </>
   );
 };
 
