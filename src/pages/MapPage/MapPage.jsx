@@ -7,7 +7,6 @@ import { useStationsAndIndicesBootstrap } from "@features/stations/hooks/useStat
 import { useIndicesForViewport } from "@features/stations/hooks/useIndicesForViewport";
 import { useDebouncedValue } from "@app/hooks";
 import { useThrottledCallback } from "@shared/lib/hooks/useThrottledCallback";
-import { useTheme } from "@app/hooks";
 import MapControls from "@widgets/Map/components/controls/MapControls.jsx";
 import { LeftPanel } from "@widgets/Map/components/panels";
 
@@ -15,7 +14,6 @@ const EPS = 1e-5;
 
 const MapPage = () => {
     const { stationId } = useParams();
-    const { toggleTheme, isDark } = useTheme();
     const { stations = [], status, error } = useStationsAndIndicesBootstrap();
 
     //bbox - bounding box of current viewport
@@ -196,8 +194,6 @@ const MapPage = () => {
           )}
           <LeftPanel stationId={stationId} indicesById={indicesById} />
           <MapControls
-            isDark={isDark}
-            toggleTheme={toggleTheme}
             geoConsent={geoConsent}
             handleGeoButtonClick={handleGeoButtonClick}
             selectedMapLayer={selectedMapLayer}

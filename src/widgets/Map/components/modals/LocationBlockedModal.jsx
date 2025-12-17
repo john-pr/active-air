@@ -10,7 +10,7 @@ const LocationBlockedModal = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-1000 flex items-center justify-center backdrop-blur-sm bg-white/30 dark:bg-black/40">
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl dark:shadow-none p-6 max-w-md mx-4 border border-transparent dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-700 rounded-lg shadow-sm p-6 max-w-md mx-4 border-2 border-[rgba(0,0,0,0.2)]">
         <h2 className="text-xl font-semibold mb-4 text-orange-600 dark:text-orange-400">
           {t("location_blocked_title")}
         </h2>

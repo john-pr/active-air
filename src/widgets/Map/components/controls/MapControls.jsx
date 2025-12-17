@@ -1,6 +1,7 @@
 import MapButton from "./MapButton.jsx";
 import Legend from "../overlays/Legend.jsx";
 import LanguageSwitcher from "../overlays/LanguageSwitcher.jsx";
+import { useTheme } from "@app/hooks";
 
 const FloatingBtn = ({ className, children, handleClick }) => (
   <button
@@ -18,8 +19,8 @@ const FloatingBtn = ({ className, children, handleClick }) => (
   </button>
 );
 
-const MapControls = props => {
-  const { isDark, toggleTheme, geoConsent, handleGeoButtonClick, selectedMapLayer, setSelectedMapLayer } = props
+const MapControls = ({ geoConsent, handleGeoButtonClick, selectedMapLayer, setSelectedMapLayer }) => {
+  const { isDark, toggleTheme } = useTheme();
 
   return (
     <>

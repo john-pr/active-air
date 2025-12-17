@@ -1,9 +1,10 @@
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { useMap, Circle } from "react-leaflet";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import StationMarker from "../components/markers/StationMarker.jsx";
 import { createClusterIcon } from "@shared/lib/utils/clusterIcon.js";
 import { extractUsableIndexValue } from "@shared/lib/utils/extractIndexValue.js";
+import { getMarkerColorFromIndexValue } from "@shared/lib/utils/colors.js";
 
 const StationsClusterLayer = ({
   stations,
@@ -14,6 +15,7 @@ const StationsClusterLayer = ({
 }) => {
   const map = useMap();
   const clusterGroupRef = useRef(null);
+
 
   const handleClusterClick = (cluster) => {
     const bounds = cluster.layer.getBounds();
@@ -28,6 +30,47 @@ const StationsClusterLayer = ({
       clusterGroupRef.current.refreshClusters();
     }
   }, [indicesById]);
+
+  // Find selected station and its color
+  const selectedStation = selectedStationId ? stations.find(s => String(s.id) === selectedStationId) : null;
+  const selectedIndexData = selectedStation ? indicesById?.[selectedStation.id] : null;
+  const selectedColor = selectedStation ? getMarkerColorFromIndexValue(extractUsableIndexValue(selectedIndexData)) : null;
+
+  // State for showing circle after animation completes
+  const [showCircle, setShowCircle] = useState(false);
+
+  useEffect(() => {
+    if (selectedStation) {
+      setShowCircle(false);
+
+      // Show circle when map finishes moving, but only if zoom is past clustering threshold
+      const onMoveEnd = () => {
+        if (map.getZoom() >= 14) {
+          setShowCircle(true);
+        } else {
+          setShowCircle(false);
+        }
+      };
+
+      // Also listen to zoom changes to hide/show circle immediately
+      const onZoom = () => {
+        if (map.getZoom() >= 14) {
+          setShowCircle(true);
+        } else {
+          setShowCircle(false);
+        }
+      };
+
+      map.on('moveend', onMoveEnd);
+      map.on('zoom', onZoom);
+      return () => {
+        map.off('moveend', onMoveEnd);
+        map.off('zoom', onZoom);
+      };
+    } else {
+      setShowCircle(false);
+    }
+  }, [selectedStationId, map]);
 
   return (
     <>
@@ -64,26 +107,23 @@ const StationsClusterLayer = ({
         })}
       </MarkerClusterGroup>
 
-      {/* Circle disabled for now - causing render issues when switching stations
-      {selectedStationCircleData && (
+      {selectedStation && selectedColor && showCircle && (
         <Circle
           key={`circle-${selectedStationId}`}
-          center={[selectedStationCircleData.lat, selectedStationCircleData.lon]}
-          radius={1500}
+          center={[selectedStation.lat, selectedStation.lon]}
+          radius={2000}
           pathOptions={{
-            color: selectedStationCircleData.color,
+            color: selectedColor,
             weight: 2,
-            opacity: 0.3,
+            opacity: 0.7,
             fill: true,
-            fillColor: selectedStationCircleData.color,
-            fillOpacity: 0.15,
+            fillColor: selectedColor,
+            fillOpacity: 0.2,
             lineCap: 'round',
             lineJoin: 'round',
           }}
-          pane="overlayPane"
         />
       )}
-      */}
     </>
   );
 };

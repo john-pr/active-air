@@ -67,7 +67,7 @@ const LeftPanel = ({ stationId, indicesById }) => {
   return (
     <>
       <style>{panelAnimationStyles}</style>
-      <div className={`absolute top-0 left-0 z-40 h-screen overflow-y-auto bg-white bg-clip-padding w-80 dark:bg-gray-700 border-r-2 border-[rgba(0,0,0,0.2)] dark:border-[rgba(255,255,255,0.2)] shadow-sm ${isExiting ? 'panel-exiting' : 'panel-entering'}`}>
+      <div className={`absolute top-0 left-0 z-40 h-screen overflow-y-auto bg-white bg-clip-padding w-80 dark:bg-gray-700 border-r-2 border-[rgba(0,0,0,0.2)] shadow-sm ${isExiting ? 'panel-exiting' : 'panel-entering'}`}>
       <div className="sticky top-0 p-6 bg-white border-b border-gray-200 dark:bg-gray-700 dark:border-gray-600">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">

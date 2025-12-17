@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { Marker, useMap, Circle } from "react-leaflet";
+import { Marker, useMap } from "react-leaflet";
 import circleSvg from "@assets/mapMarkers/circleMarker.svg?raw";
 import { getMarkerColorFromIndexValue } from "@shared/lib/utils/colors.js";
 import { useNavigate } from "react-router";
@@ -53,22 +53,6 @@ const StationMarker = ({
 
   return (
     <>
-      {isSelected && (
-        <Circle
-          center={[station.lat, station.lon]}
-          radius={2000}
-          pathOptions={{
-            color: color,
-            weight: 2,
-            opacity: 0.7,
-            fill: true,
-            fillColor: color,
-            fillOpacity: 0.2,
-            lineCap: 'round',
-            lineJoin: 'round',
-          }}
-        />
-      )}
       <Marker
         ref={markerRef}
         position={[station.lat, station.lon]}
@@ -80,8 +64,6 @@ const StationMarker = ({
               L.DomEvent.stopPropagation(e);
               return;
             }
-
-            console.log(`[Station Selected] ID: ${station.id}, Name: ${station.name}, Coords: [${station.lat}, ${station.lon}], AQI: ${indexValue}`);
 
             navigate(`/station/${station.id}`);
             // Longer duration when zoomed out, shorter when already zoomed in
