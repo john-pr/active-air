@@ -1,6 +1,6 @@
 import { showErrorToast } from "@app/ToastContext";
 
-const BASE = "/gios/pjp-api/v1/rest";
+const BASE = `${import.meta.env.VITE_API_BASE_GIOS}/pjp-api/v1/rest`;
 
 async function getJson(url) {
   const res = await fetch(url);
