@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { useAppDispatch, useAppSelector } from "@app/hooks.js";
 import { fetchStationDetails } from "@features/stationDetails/model/stationDetailsSlice.js";
 import {
@@ -8,10 +8,13 @@ import {
 import { getMarkerColorFromIndexValue } from "@shared/lib/utils/colors.js";
 import { useTranslation } from "react-i18next";
 import MeasurementChart from "@widgets/MeasurementChart/MeasurementChart.jsx";
+import { getThresholdPercentage } from "@shared/lib/utils/pollutantUtils.js";
+import { ThemeContext } from "@app/ThemeContext.jsx";
 
 const StationDetailsPanel = ({ stationId, indexValue }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation("common");
+  const { isDark } = useContext(ThemeContext);
   const [expandedSections, setExpandedSections] = useState({
     pm10: true,
     pm25: true,
@@ -63,15 +66,23 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
   };
 
   const getPollutantColor = (key) => {
-    // Distinct, pleasing colors for each pollutant type
     const colors = {
-      pm10: "#dc2626",   // vibrant red
-      pm25: "#ea580c",   // vibrant orange
-      o3: "#ca8a04",     // golden yellow
-      no2: "#0891b2",    // vibrant cyan
-      so2: "#7c3aed",    // vibrant purple
+      light: {
+        pm10: "#991b1b",   // dark red for light mode
+        pm25: "#92400e",   // dark orange for light mode
+        o3: "#713f12",     // dark yellow for light mode
+        no2: "#164e63",    // dark cyan for light mode
+        so2: "#4c1d95",    // dark purple for light mode
+      },
+      dark: {
+        pm10: "#fca5a5",   // light red for dark mode
+        pm25: "#fed7aa",   // light orange for dark mode
+        o3: "#fef3c7",     // light yellow for dark mode
+        no2: "#67e8f9",    // light cyan for dark mode
+        so2: "#d8b4fe",    // light purple for dark mode
+      },
     };
-    return colors[key] || "#9ca3af";
+    return colors[isDark ? "dark" : "light"][key] || "#9ca3af";
   };
 
   const aqiColor = getMarkerColorFromIndexValue(indexValue);
@@ -81,11 +92,11 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
 
   return (
     <div className="space-y-4 text-sm text-gray-900 dark:text-gray-100">
-      <div className="p-4 rounded border" style={aqiBgColor}>
-        <div className="text-xs font-semibold uppercase mb-2" style={{ color: aqiColor }}>
+      <div className="p-4 border rounded" style={aqiBgColor}>
+        <div className="mb-2 text-xs font-semibold uppercase" style={{ color: aqiColor }}>
           {t("station_popup.aqi")}
         </div>
-        <div className="text-3xl font-bold mb-2" style={aqiTextColor}>
+        <div className="mb-2 text-3xl font-bold" style={aqiTextColor}>
           {indexValue ?? t("station_popup.no_index")}
         </div>
         <div className="text-sm font-semibold" style={aqiTextColor}>
@@ -94,54 +105,44 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
       </div>
 
       {status === "loading" && (
-        <div className="text-gray-600 dark:text-gray-400 text-center py-4">
+        <div className="py-4 text-center text-gray-600 dark:text-gray-400">
           {t("station_popup.loading_measurements")}
         </div>
       )}
 
       {status === "succeeded" && details && (
         <style>{`
-          @keyframes slideDown {
-            from {
-              opacity: 0;
-              max-height: 0;
-              overflow: hidden;
-            }
-            to {
-              opacity: 1;
-              max-height: 500px;
-              overflow: visible;
-            }
+          .pollutant-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
           }
 
-          @keyframes slideUp {
-            from {
-              opacity: 1;
-              max-height: 500px;
-              overflow: visible;
-            }
-            to {
-              opacity: 0;
-              max-height: 0;
-              overflow: hidden;
-            }
+          .pollutant-content.collapsed {
+            max-height: 0;
           }
 
-          .chart-content-enter {
-            animation: slideDown 0.3s ease-out forwards;
-          }
-
-          .chart-content-exit {
-            animation: slideUp 0.2s ease-in forwards;
+          .pollutant-content.expanded {
+            max-height: 600px;
           }
         `}</style>
       )}
       {status === "succeeded" && details && (
         <div className="space-y-4">
           {/* Current Values Summary */}
-          <div className="rounded border-l-4 p-4" style={{ borderColor: aqiColor, backgroundColor: aqiColor + "08" }}>
-            <div className="text-xs font-semibold uppercase mb-3" style={{ color: aqiColor }}>
-              {t("station_popup.current_values")}
+          <div className="p-4 border-l-4 rounded" style={{ borderColor: aqiColor, backgroundColor: aqiColor + "08" }}>
+            <div className="flex justify-between mb-3 text-xs font-semibold uppercase" style={{ color: aqiColor }}>
+              {t("station_popup.latest_measurements")}
+              {details.pm10 && details.pm10.length > 0 && (
+                <span className="ml-2 text-xs">
+                  {(() => {
+                    const latestData = details.pm10[details.pm10.length - 1];
+                    const date = new Date(latestData.dateString);
+                    const hours = date.getHours().toString().padStart(2, "0");
+                    const minutes = date.getMinutes().toString().padStart(2, "0");
+                    return `${hours}:${minutes}`;
+                  })()}
+                </span>
+              )}
             </div>
             <div className="space-y-2">
               {[
@@ -154,12 +155,21 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
                 .filter(({ data }) => data && data.length > 0)
                 .map(({ key, label, data }) => {
                   const pollutantColor = getPollutantColor(key);
+                  const currentValue = data[data.length - 1]?.value;
+                  const thresholdPercentage = getThresholdPercentage(currentValue, key);
                   return (
-                    <div key={key} className="flex justify-between items-center text-xs">
+                    <div key={key} className="flex items-center justify-between text-xs">
                       <span style={{ color: pollutantColor }}>{label}</span>
-                      <span className="font-semibold" style={{ color: pollutantColor }}>
-                        {data[data.length - 1]?.value?.toFixed(1)} µg/m³
-                      </span>
+                      <div className="flex flex-col items-end gap-0.5">
+                        <span className="font-semibold" style={{ color: pollutantColor }}>
+                          {currentValue?.toFixed(1)} µg/m³
+                        </span>
+                        {thresholdPercentage !== null && (
+                          <span className="text-xs opacity-75" style={{ color: pollutantColor }}>
+                            {thresholdPercentage}% {t("station_popup.of_norm")}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   );
                 })}
@@ -182,12 +192,12 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
               return (
                 <div
                   key={key}
-                  className="rounded border-l-4 overflow-hidden transition-all duration-200"
+                  className="overflow-hidden border-l-4 rounded"
                   style={{ borderColor: pollutantColor, backgroundColor: pollutantColor + "08" }}
                 >
                   <button
                     onClick={() => toggleSection(key)}
-                    className="w-full px-4 py-3 flex items-center justify-between hover:opacity-80 transition-opacity cursor-pointer"
+                    className="flex items-center justify-between w-full px-4 py-3 transition-opacity cursor-pointer hover:opacity-80"
                   >
                     <div className="text-xs font-semibold uppercase" style={{ color: pollutantColor }}>
                       {label}
@@ -207,15 +217,19 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
                       />
                     </svg>
                   </button>
-                  {isExpanded && (
-                    <div className="px-4 pb-3 chart-content-enter">
+                  <div
+                    className={`pollutant-content ${
+                      isExpanded ? "expanded" : "collapsed"
+                    }`}
+                  >
+                    <div className="px-4 pb-3">
                       <MeasurementChart
                         measurements={data}
                         pollutantLabel={label}
-                        pollutantColor={aqiColor}
+                        pollutantColor={pollutantColor}
                       />
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}
@@ -224,7 +238,7 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
       )}
 
       {status === "failed" && (
-        <div className="text-gray-600 dark:text-gray-400 text-center py-4">
+        <div className="py-4 text-center text-gray-600 dark:text-gray-400">
           {t("station_popup.no_measurements")}
         </div>
       )}

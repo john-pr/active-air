@@ -96,7 +96,7 @@ const Legend = () => {
         </button>
 
         {(isExpanded || isClosing) && (
-          <div className={`fixed bg-white dark:bg-gray-700 rounded-sm border-2 border-[rgba(0,0,0,0.2)] bg-clip-padding shadow-sm flex items-stretch py-1.5 pr-1.5 pl-0 ${isClosing ? 'legend-closing' : 'legend-expanded-content'}`} style={{ bottom: `${expandedBottom}px`, right: `10px` }}>
+          <div className={`fixed bg-white dark:bg-gray-700 rounded-sm border-2 border-[rgba(0,0,0,0.2)] bg-clip-padding shadow-sm flex items-stretch py-1.5 pr-1.5 pl-0 ${isClosing ? 'legend-closing' : 'legend-expanded-content'}`} style={{ bottom: `${expandedBottom}px`, right: `10px`, minWidth: '260px' }}>
             <button
               onClick={handleClose}
               className="ml-1.5 mr-2 transition-colors rounded hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex items-center"
@@ -110,7 +110,7 @@ const Legend = () => {
                       className="w-5 h-6 shrink-0"
                     />
                     <span className="text-xs px-2 py-2 my-0.5 border-b border-[rgba(0,0,0,0.2)] text-center text-gray-900 dark:text-gray-100 dark:border-[rgba(255,255,255,0.2)]">
-                      {t("legend.title")}
+                      {t("legend.title")} PM
                     </span>
                   </div>
               {legendItems.map((item) => {

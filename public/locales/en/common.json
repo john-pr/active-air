@@ -23,6 +23,8 @@
   "station_popup.so2": "SO₂",
   "station_popup.no_data": "no data",
   "station_popup.no_measurements": "No measurement data",
+  "station_popup.latest_measurements": "Latest measurements",
+  "station_popup.of_norm": "of norm",
   "station_popup.date": "Date",
   "station_popup.value": "Value",
   "station_popup.station_code": "Station Code",
@@ -33,5 +35,18 @@
   "legend.sufficient": "Sufficient",
   "legend.bad": "Bad",
   "legend.very_bad": "Very Bad",
-  "legend.no_data": "No Data"
+  "legend.no_data": "No Data",
+  "legend.pm_unit": "(µg/m³)",
+  "legend.health_very_good": "Air quality very good, no health risks",
+  "legend.activity_very_good": "Outdoor activity possible without restrictions",
+  "legend.health_good": "Low health risk",
+  "legend.activity_good": "Physical activity and outdoor stays without restrictions",
+  "legend.health_moderate": "Air acceptable, may pose risk to sensitive groups",
+  "legend.activity_moderate": "Activity possible, but sensitive groups should be cautious",
+  "legend.health_sufficient": "Pollution poses health risk, especially for sensitive groups",
+  "legend.activity_sufficient": "Consider limiting outdoor activity, especially prolonged or intense",
+  "legend.health_bad": "Poor air quality; health risk",
+  "legend.activity_bad": "Sick, elderly, pregnant women and children should avoid outdoors. Others should limit activity",
+  "legend.health_very_bad": "Very strong pollution negatively affects health",
+  "legend.activity_very_bad": "Risk groups must absolutely avoid outdoors. Others should minimize time outside"
 }

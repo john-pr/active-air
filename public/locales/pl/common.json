@@ -23,6 +23,8 @@
   "station_popup.so2": "SO₂",
   "station_popup.no_data": "brak danych",
   "station_popup.no_measurements": "Brak danych pomiarowych",
+  "station_popup.latest_measurements": "Najnowsze pomiary",
+  "station_popup.of_norm": "normy",
   "station_popup.date": "Data",
   "station_popup.value": "Wartość",
   "station_popup.station_code": "Kod stanowiska",
@@ -33,5 +35,18 @@
   "legend.sufficient": "Dostateczny",
   "legend.bad": "Zły",
   "legend.very_bad": "Bardzo zły",
-  "legend.no_data": "Brak danych"
+  "legend.no_data": "Brak danych",
+  "legend.pm_unit": "(µg/m³)",
+  "legend.health_very_good": "Jakość powietrza bardzo dobra, brak zagrożeń zdrowotnych",
+  "legend.activity_very_good": "Aktywność na zewnątrz możliwa bez ograniczeń",
+  "legend.health_good": "Niskie ryzyko zdrowotne",
+  "legend.activity_good": "Aktywność fizyczna i przebywanie na zewnątrz bez ograniczeń",
+  "legend.health_moderate": "Powietrze akceptowalne, może stanowić zagrożenie dla osób wrażliwych",
+  "legend.activity_moderate": "Aktywność możliwa, ale osoby wrażliwe powinny być ostrożne",
+  "legend.health_sufficient": "Zanieczyszczenie stanowi ryzyko zdrowotne, szczególnie dla osób wrażliwych",
+  "legend.activity_sufficient": "Należy rozważyć ograniczenie aktywności na zewnątrz, zwłaszcza długotrwałej lub intensywnej",
+  "legend.health_bad": "Jakość powietrza zła; ryzyko dla zdrowia",
+  "legend.activity_bad": "Osoby chore, starsze, kobiety w ciąży i małe dzieci powinny unikać zewnątrz. Pozostali powinni ograniczyć aktywność",
+  "legend.health_very_bad": "Bardzo silne zanieczyszczenie negatywnie wpływa na zdrowie",
+  "legend.activity_very_bad": "Grupy ryzyka powinny bezwzględnie unikać zewnątrz. Pozostali powinni minimalizować czas poza domem"
 }
