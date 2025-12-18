@@ -5,6 +5,22 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Safari mobile viewport fix */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #1f2937;
+}
+
+/* Use viewport units for full screen coverage on mobile */
+html {
+  height: 100vh;
+  height: 100dvh;
+}
+
 /* @layer components {
   .dark .leaflet-tile-pane {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);

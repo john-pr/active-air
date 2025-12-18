@@ -104,46 +104,63 @@ const MapPage = () => {
         setIsLayerReady(true);
     }, []);
 
-    // Check browser geolocation permission on mount
+    // Initialize geoConsent as null (prompt state) - don't query permissions on mount
+    // iOS Safari requires user gesture before showing permission prompt
     useEffect(() => {
-        if (navigator.permissions) {
-            navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-                if (result.state === 'denied') {
-                    setGeoConsent(false);
-                } else if (result.state === 'granted') {
-                    setGeoConsent(true);
-                } else {
-                    // 'prompt' state - permission not yet decided
-                    setGeoConsent(null);
-                }
-            }).catch(() => {
-                // Fallback if permissions API not available
-                setGeoConsent(null);
-            });
-        } else {
-            setGeoConsent(null);
-        }
+        setGeoConsent(null);
     }, []);
 
+    const isIOS = () => {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    };
+
+    const redirectToIOSSettings = () => {
+        // On iOS, we can't directly open Settings from Safari
+        // Show a modal with instructions instead
+        setShowBlockedModal(true);
+    };
+
     const getUserLocation = (shouldZoom = false) => {
+        console.log("getUserLocation called. IsIOS:", isIOS(), "HTTPS:", window.location.protocol === 'https:');
+
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
+                    console.log("Location success:", position.coords);
                     const newCenter = [position.coords.latitude, position.coords.longitude];
                     setMapCenter(newCenter);
                     setGeoConsent(true);
-                    
+
                     // If shouldZoom is true, we'll pass zoom info to MapView
                     if (shouldZoom) setMapZoom(13);
                 },
                 (error) => {
+                    console.error("Geolocation error code:", error.code);
                     console.error("Error getting location:", error);
+
                     if (error.code === error.PERMISSION_DENIED) {
+                        console.error("Location permission was DENIED by user");
                         setGeoConsent(false);
                         setIsBrowserBlocked(true);
+
+                        // On iOS, show modal with instructions
+                        if (isIOS()) {
+                            redirectToIOSSettings();
+                        }
+                    } else if (error.code === error.POSITION_UNAVAILABLE) {
+                        console.error("Position unavailable - device may not have GPS or signal");
+                    } else if (error.code === error.TIMEOUT) {
+                        console.error("Geolocation request timed out");
                     }
+                },
+                {
+                    enableHighAccuracy: false,
+                    timeout: 10000,
+                    maximumAge: 0
                 }
             );
+        } else {
+            console.warn("Geolocation is not supported in this browser");
         }
     };
 
@@ -153,7 +170,7 @@ const MapPage = () => {
 
     const handleGeoButtonClick = () => {
         if (geoConsent === false || isBrowserBlocked) {
-            // Location is blocked, show instructions
+            // Location is blocked, show instructions modal
             setShowBlockedModal(true);
         } else {
             // Location enabled or prompt state - try to get location and zoom
@@ -171,7 +188,7 @@ const MapPage = () => {
 
     if (!isLayerReady || status === "loading") {
         return (
-          <div className="flex min-h-dvh w-dvw items-center justify-center">
+          <div className="flex min-h-dvh w-dvw items-center justify-center bg-gray-800">
             <ThreeDots
               className="
                 w-[12vw] max-w-14 min-w-6
@@ -186,7 +203,7 @@ const MapPage = () => {
     if (status === "failed") return <></>;
 
     return (
-        <div className="h-screen w-screen relative">
+        <div className="h-dvh w-dvw relative" style={{ height: '100dvh', width: '100dvw' }}>
           {showBlockedModal && (
             <LocationBlockedModal
               onClose={handleBlockedModalClose}

@@ -29,6 +29,8 @@ export default defineConfig({
     svgr(),
   ],
    server: {
+    host: '0.0.0.0',
+    port: 5173,
     proxy: {
       "/gios": {
         target: "https://api.gios.gov.pl",
