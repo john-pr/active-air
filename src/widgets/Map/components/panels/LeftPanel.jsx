@@ -97,9 +97,9 @@ const LeftPanel = ({ stationId, indicesById }) => {
   return (
     <>
       <style>{panelAnimationStyles}</style>
-      <div className={`absolute top-0 left-0 z-40 h-screen overflow-y-auto bg-white bg-clip-padding w-80 dark:bg-gray-700 border-r-2 border-[rgba(0,0,0,0.2)] shadow-sm panel-scrollable ${isExiting ? 'panel-exiting' : 'panel-entering'}`}>
-      <div className="sticky top-0 z-50 p-6 bg-white border-b border-gray-200 dark:bg-gray-700 dark:border-gray-600">
-        <div className="flex items-start justify-between gap-3">
+      <div className={`absolute top-0 left-0 z-40 h-screen overflow-y-auto bg-white border-[rgba(0,0,0,0.2)] bg-clip-padding w-80 dark:bg-gray-700 shadow-sm panel-scrollable ${isExiting ? 'panel-exiting' : 'panel-entering'}`}>
+      <div className="sticky top-0 z-50 p-6 pb-4 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="text-lg font-semibold text-gray-900 truncate dark:text-white">
               {station.name}
@@ -112,7 +112,7 @@ const LeftPanel = ({ stationId, indicesById }) => {
           </div>
           <button
             onClick={handleClose}
-            className="p-1 text-gray-900 transition-colors rounded hover:bg-gray-200 dark:hover:bg-gray-700 shrink-0 dark:text-gray-300 cursor-pointer"
+            className="p-2 text-gray-900 transition-colors rounded hover:bg-gray-200 dark:hover:bg-gray-700 shrink-0 dark:text-gray-300 cursor-pointer"
             aria-label="Close panel"
           >
             <svg

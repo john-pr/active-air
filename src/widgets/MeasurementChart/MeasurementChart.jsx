@@ -35,9 +35,10 @@ const MeasurementChart = ({ measurements, pollutantLabel, pollutantColor = "#3b8
     // Values for the bar chart
     const data = measurements.map((m) => m.value);
 
-    // Create border colors array - highlight the last (most recent) data point with white
+    // Create border colors array - highlight the last (most recent) data point with contrasting color
+    const lastBarBorderColor = isDark ? "#ffffff" : "#fbbf24";
     const borderColors = measurements.map((_, index) =>
-      index === measurements.length - 1 ? "#ffffff" : pollutantColor
+      index === measurements.length - 1 ? lastBarBorderColor : pollutantColor
     );
     const borderWidths = measurements.map((_, index) =>
       index === measurements.length - 1 ? 2 : 1

@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import MeasurementChart from "@widgets/MeasurementChart/MeasurementChart.jsx";
 import { getThresholdPercentage } from "@shared/lib/utils/pollutantUtils.js";
 import { ThemeContext } from "@app/ThemeContext.jsx";
-import { Heart, Activity, ChevronDown } from "lucide-react";
+import { Heart, Activity, ChevronDown, Info } from "lucide-react";
 
 const StationDetailsPanel = ({ stationId, indexValue }) => {
   const dispatch = useAppDispatch();
@@ -101,14 +101,14 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
   };
 
   const aqiColor = getMarkerColorFromIndexValue(indexValue);
-  const aqiBgColor = { backgroundColor: aqiColor + "20", borderColor: aqiColor };
+  const aqiBgColor = { backgroundColor: aqiColor + "20" };
   const aqiTextColor = { color: aqiColor };
   const aqiLabel = getAqiLabel(indexValue);
   const aqiRecs = getAqiRecommendations(indexValue);
 
   return (
-    <div className="space-y-4 text-sm text-gray-900 dark:text-gray-100">
-      <div className="p-4 border rounded" style={aqiBgColor}>
+    <div className="space-y-6 text-sm text-gray-900 dark:text-gray-100">
+      <div className="p-6 rounded-lg" style={aqiBgColor}>
         <div className="flex items-start justify-between mb-2">
           <div className="text-xs font-semibold uppercase" style={{ color: aqiColor }}>
             {t("station_popup.aqi")}
@@ -116,31 +116,27 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
           {aqiRecs && (
             <button
               onClick={() => setShowAqiInfo(!showAqiInfo)}
-              className="flex items-center justify-center w-5 h-5 rounded-full border transition-colors cursor-pointer"
-              style={{
-                borderColor: aqiColor,
-                color: aqiColor,
-                backgroundColor: showAqiInfo ? aqiColor + "20" : "transparent"
-              }}
-              title={t("station_popup.aqi_info")}
+              className="flex items-center justify-center w-6 h-6 transition-colors rounded-full cursor-pointer hover:bg-black/10 dark:hover:bg-white/10"
+              style={{ color: aqiColor }}
+              aria-label={t("station_popup.aqi_info")}
             >
-              <span className="text-xs font-bold">i</span>
+              <Info size={16} strokeWidth={2} />
             </button>
           )}
         </div>
-        <div className="mb-2 text-3xl font-bold" style={aqiTextColor}>
+        <div className="mb-2 text-4xl font-bold" style={aqiTextColor}>
           {indexValue ?? t("station_popup.no_index")}
         </div>
         <div className="text-sm font-semibold" style={aqiTextColor}>
           {t(aqiLabel)}
         </div>
         {aqiRecs && showAqiInfo && (
-          <div className="space-y-2 text-xs mt-3 pt-3 border-t" style={{ borderColor: aqiColor + "40" }}>
-            <div className="flex gap-2 opacity-85">
+          <div className="pt-3 mt-3 space-y-2 text-xs border-t" style={{ borderColor: aqiColor + "40" }}>
+            <div className="flex gap-2 opacity-70">
               <Heart size={14} strokeWidth={2.5} className="shrink-0 mt-0.5" style={{ color: aqiColor }} />
               <span>{t(aqiRecs.health)}</span>
             </div>
-            <div className="flex gap-2 opacity-85">
+            <div className="flex gap-2 opacity-70">
               <Activity size={14} strokeWidth={2.5} className="shrink-0 mt-0.5" style={{ color: aqiColor }} />
               <span>{t(aqiRecs.activity)}</span>
             </div>
@@ -173,11 +169,11 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
       {status === "succeeded" && details && (
         <div className="space-y-4">
           {/* Current Values Summary */}
-          <div className="p-4 border-l-4 rounded" style={{ borderColor: aqiColor, backgroundColor: aqiColor + "08" }}>
-            <div className="flex justify-between mb-3 text-xs font-semibold uppercase" style={{ color: aqiColor }}>
-              {t("station_popup.latest_measurements")}
+          <div className="p-4 rounded-lg" style={{ backgroundColor: aqiColor + "10" }}>
+            <div className="mb-3 text-xs font-semibold uppercase " style={{ color: aqiColor }}>
+              {t("station_popup.latest_measurements") + ' - '}
               {details.pm10 && details.pm10.length > 0 && (
-                <span className="ml-2 text-xs">
+                <span className="text-xs ">
                   {(() => {
                     const latestData = details.pm10[details.pm10.length - 1];
                     const date = new Date(latestData.dateString);
@@ -188,7 +184,7 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
                 </span>
               )}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {[
                 { key: "pm10", label: t("station_popup.pm10"), data: details.pm10 },
                 { key: "pm25", label: t("station_popup.pm25"), data: details.pm25 },
@@ -216,22 +212,24 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
                             </span>
                           )}
                         </div>
-                        {thresholdPercentage !== null && (
-                          <button
-                            onClick={() => setShowNormPercentage(prev => ({
-                              ...prev,
-                              [key]: !prev[key]
-                            }))}
-                            className="shrink-0 flex items-center justify-center transition-transform cursor-pointer hover:opacity-70"
-                            style={{
-                              color: pollutantColor,
-                              transform: showPercent ? "rotate(180deg)" : "rotate(0deg)"
-                            }}
-                            title={t("station_popup.show_norm")}
-                          >
-                            <ChevronDown size={14} strokeWidth={2} />
-                          </button>
-                        )}
+                        <div className="flex items-center justify-center w-6 shrink-0">
+                          {thresholdPercentage !== null && (
+                            <button
+                              onClick={() => setShowNormPercentage(prev => ({
+                                ...prev,
+                                [key]: !prev[key]
+                              }))}
+                              className="flex items-center justify-center transition-transform cursor-pointer hover:opacity-70"
+                              style={{
+                                color: pollutantColor,
+                                transform: showPercent ? "rotate(180deg)" : "rotate(0deg)"
+                              }}
+                              title={t("station_popup.show_norm")}
+                            >
+                              <ChevronDown size={16} strokeWidth={2} />
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
@@ -240,7 +238,7 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
           </div>
 
           {/* Charts Section */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             {[
               { key: "pm10", label: t("station_popup.pm10"), data: details.pm10 },
               { key: "pm25", label: t("station_popup.pm25"), data: details.pm25 },
@@ -255,12 +253,15 @@ const StationDetailsPanel = ({ stationId, indexValue }) => {
               return (
                 <div
                   key={key}
-                  className="overflow-hidden border-l-4 rounded"
-                  style={{ borderColor: pollutantColor, backgroundColor: pollutantColor + "08" }}
+                  className={`overflow-hidden rounded-lg transition-colors ${
+                    isExpanded ? "bg-gray-100 dark:bg-gray-800/50" : "bg-gray-50 dark:bg-gray-800/30"
+                  }`}
                 >
                   <button
                     onClick={() => toggleSection(key)}
-                    className="flex items-center justify-between w-full px-4 py-3 transition-opacity cursor-pointer hover:opacity-80"
+                    className={`flex items-center justify-between w-full px-4 py-3.5 transition-colors cursor-pointer ${
+                      isExpanded ? "hover:bg-gray-200 dark:hover:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-600"
+                    }`}
                   >
                     <div className="text-xs font-semibold uppercase" style={{ color: pollutantColor }}>
                       {label}

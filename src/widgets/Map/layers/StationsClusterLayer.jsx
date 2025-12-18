@@ -21,7 +21,7 @@ const StationsClusterLayer = ({
     const bounds = cluster.layer.getBounds();
     const currentZoom = map.getZoom();
     const duration = currentZoom >= 12 ? 0.5 : currentZoom >= 9 ? 0.75 : 1;
-    map.flyToBounds(bounds, { duration, padding: [50, 50] });
+    map.flyToBounds(bounds, { duration, padding: [50, 50], maxZoom: 14 });
   };
 
   // When indices load, rebuild cluster icons since they depend on indexValue
