@@ -47,7 +47,7 @@ const MapCenterUpdater = ({ center, flyToStation, isPanelOpen }) => {
 };
 
 const MapView = props => {
-    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange, zoom, flyToStation, isPanelOpen, selectedStationCircleData } = props;
+    const { selectedStationId, selectedMapLayer, center, stations, indicesById, onViewPortChange, zoom, flyToStation, isPanelOpen, selectedStationCircleData, userLocation } = props;
 
 
     return (
@@ -68,6 +68,7 @@ const MapView = props => {
                 selectedStationId={selectedStationId}
                 isInitialUrlEntry={flyToStation}
                 selectedStationCircleData={selectedStationCircleData}
+                userLocation={userLocation}
              />
              <ZoomControl position="bottomright" />
         </MapContainer>

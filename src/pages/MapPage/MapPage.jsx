@@ -255,6 +255,7 @@ const MapPage = () => {
            flyToStation={!!initialStationTarget}
            isPanelOpen={!!stationId}
            selectedStationCircleData={selectedStationCircleData}
+           userLocation={geoConsent && isMobile() ? { lat: mapCenter[0], lon: mapCenter[1] } : null}
           />
           <Outlet />
         </div>

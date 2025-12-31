@@ -2,6 +2,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import { useMap, Circle } from "react-leaflet";
 import { useEffect, useRef, useState } from "react";
 import StationMarker from "../components/markers/StationMarker.jsx";
+import UserLocationMarker from "../components/markers/UserLocationMarker.jsx";
 import { createClusterIcon } from "@shared/lib/utils/clusterIcon.js";
 import { extractUsableIndexValue } from "@shared/lib/utils/extractIndexValue.js";
 import { getMarkerColorFromIndexValue } from "@shared/lib/utils/colors.js";
@@ -12,6 +13,7 @@ const StationsClusterLayer = ({
   selectedStationId,
   isInitialUrlEntry,
   selectedStationCircleData,
+  userLocation,
 }) => {
   const map = useMap();
   const clusterGroupRef = useRef(null);
@@ -95,6 +97,13 @@ const StationsClusterLayer = ({
           );
         })}
       </MarkerClusterGroup>
+
+      {userLocation && (
+        <UserLocationMarker
+          lat={userLocation.lat}
+          lon={userLocation.lon}
+        />
+      )}
 
       {selectedStation && selectedColor && showCircle && (
         <Circle
